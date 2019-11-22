@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">AndroidDeveloperTask</string>
+    <string name="title_button_login">Login</string>
+    <string name="hello">Hello</string>
+    <string name="email_required">Email required</string>
+    <string name="password_required">Password required</string>
+    <string name="please_enter_password">Please, enter password</string>
+    <string name="password">password</string>
+    <string name="email">email</string>
+    <string name="title_button_cancel">Cancel</string>
+    <string name="title_button_try_again">Try again</string>
+    <string name="something_really_goes_wrong">Something really goes wrong</string>
+
+</resources>
