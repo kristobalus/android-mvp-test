@@ -19,6 +19,7 @@ public class ApiModule {
 
 
     @Provides
+    @Singleton
     Retrofit provideRetrofit() {
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -39,6 +40,7 @@ public class ApiModule {
     }
 
     @Provides
+    @Singleton
     AuthenticationService provideAuthenticationService(Retrofit retrofit) {
         return retrofit.create(AuthenticationService.class);
     }
