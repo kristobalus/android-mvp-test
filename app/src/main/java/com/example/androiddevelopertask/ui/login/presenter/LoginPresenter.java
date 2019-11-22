@@ -51,7 +51,9 @@ public class LoginPresenter extends BasePresenter<LoginContract.LoginMvpView>
     private PublishSubject<Throwable> apiException = PublishSubject.create();
 
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private CompositeDisposable viewDisposable = new CompositeDisposable();
+    private CompositeDisposable networkDisposable = new CompositeDisposable();
+
 
 
     public LoginPresenter() {
@@ -65,21 +67,22 @@ public class LoginPresenter extends BasePresenter<LoginContract.LoginMvpView>
 
     @Override
     public void onViewResumed() {
-        disposable.add(email.subscribe(mvpView::showEmail));
-        disposable.add(password.subscribe(mvpView::showPassword));
-        disposable.add(emailError.subscribe(mvpView::showEmailValidationError));
-        disposable.add(passwordError.subscribe(mvpView::showPasswordValidationError));
-        disposable.add(progressVisible.subscribe(mvpView::showLoading));
-        disposable.add(buttonEnabled.subscribe(mvpView::setLoginButtonEnabled));
-        disposable.add(buttonTitle.subscribe(mvpView::showButtonTitle));
-        disposable.add(apiErrorMessage.subscribe(mvpView::showErrorMessage));
-        disposable.add(apiSuccessMessage.subscribe(mvpView::showSuccessMessage));
-        disposable.add(apiException.subscribe(mvpView::showError));
+        viewDisposable.add(email.subscribe(mvpView::showEmail));
+        viewDisposable.add(password.subscribe(mvpView::showPassword));
+        viewDisposable.add(emailError.subscribe(mvpView::showEmailValidationError));
+        viewDisposable.add(passwordError.subscribe(mvpView::showPasswordValidationError));
+        viewDisposable.add(progressVisible.subscribe(mvpView::showLoading));
+        viewDisposable.add(buttonEnabled.subscribe(mvpView::setLoginButtonEnabled));
+        viewDisposable.add(buttonTitle.subscribe(mvpView::showButtonTitle));
+        viewDisposable.add(apiErrorMessage.subscribe(mvpView::showErrorMessage));
+        viewDisposable.add(apiSuccessMessage.subscribe(mvpView::showSuccessMessage));
+        viewDisposable.add(apiException.subscribe(mvpView::showError));
     }
 
     @Override
     public void onViewPaused() {
-        disposable.clear();
+        viewDisposable.clear();
+        networkDisposable.clear();
     }
 
     @Override
@@ -133,8 +136,8 @@ public class LoginPresenter extends BasePresenter<LoginContract.LoginMvpView>
     public void submit() {
 
         if (state == States.CANCELABLE) {
-            disposable.clear();
-            setState(States.SUBMIT);
+            networkDisposable.clear();
+            setState(States.RETRY);
             return;
         }
 
@@ -187,7 +190,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.LoginMvpView>
                         apiException.onNext(err);
                     });
 
-            disposable.add(d);
+            networkDisposable.add(d);
         } else {
             buttonEnabled.onNext(false);
         }
