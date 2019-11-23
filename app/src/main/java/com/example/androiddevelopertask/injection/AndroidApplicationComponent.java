@@ -5,9 +5,12 @@ import com.example.androiddevelopertask.ui.login.presenter.LoginPresenter;
 import com.example.androiddevelopertask.ui.login.view.LoginActivity;
 import com.example.androiddevelopertask.ui.success.view.SuccessActivity;
 
+import javax.inject.Singleton;
+
 import dagger.Component;
 
 @Component(modules = {PresenterModule.class, ApiModule.class})
+@Singleton
 public interface AndroidApplicationComponent {
 
     void inject(LoginActivity loginActivity);
